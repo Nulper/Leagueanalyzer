@@ -378,7 +378,7 @@ def analyze_matches():
             save_plot_images("match_data.csv")
             
             # Save the compiled executable file
-            os.system("pyinstaller --onefile backend/main.py")
+            os.system("pyinstaller --onefile backend/main.py --add-data 'frontend/build;frontend/build'")
             
             print("Sending data to frontend:", len(match_data_list), "matches")
             return jsonify({
