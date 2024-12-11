@@ -320,7 +320,7 @@ def riemann_prediction(time_points, values, future_points=5):
         return None
 
 # Flask app for frontend integration
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
 CORS(app)
 
 @app.route('/api/analyze-matches', methods=['POST'])
@@ -403,7 +403,11 @@ def download_executable():
     """Serve the compiled executable file to the frontend"""
     return send_from_directory('dist', 'main.exe')
 
+@app.route('/')
+def serve_frontend():
+    return send_from_directory(app.static_folder, 'index.html')
+
 if __name__ == "__main__":
     # Ensure plots directory exists
     os.makedirs('plots', exist_ok=True)
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5000, host='0.0.0.0')
