@@ -10,8 +10,10 @@ from data_visualization import save_plot_images  # Import the new visualization 
 import numpy as np
 from scipy import stats
 from scipy.optimize import curve_fit
+import openai
 
 api_key = ""
+openai_api_key = "YOUR_OPENAI_API_KEY"
 
 class RiotAPIHeaders:
     def __init__(self, api_key):
@@ -22,9 +24,15 @@ class RiotAPIHeaders:
             "Origin": "https://developer.riotgames.com",
             "X-Riot-Token": api_key
         }
-# Copy ALL the original functions from your prototype.py here:
-# get_player_data, get_summoner_data, match_finder, match_data, 
-# collect_match_data, save_data_to_csv functions - DO NOT MODIFY THEM
+
+def get_openai_response(prompt):
+    openai.api_key = openai_api_key
+    response = openai.Completion.create(
+        engine="gpt-4o-mini",
+        prompt=prompt,
+        max_tokens=150
+    )
+    return response.choices[0].text.strip()
 
 def get_player_data(api_key, name, tag):
     base_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id"
@@ -361,6 +369,10 @@ def analyze_matches():
                 if pred:
                     predictions[metric] = pred
             
+            # AI 분석 요청
+            prompt = f"Analyze the following match data and recommend champions: {json.dumps(match_data_list)}"
+            ai_response = get_openai_response(prompt)
+            
             # 저장 및 시각화 로직
             save_data_to_csv(match_data_list)
             save_plot_images("match_data.csv")
@@ -371,7 +383,8 @@ def analyze_matches():
             print("Sending data to frontend:", len(match_data_list), "matches")
             return jsonify({
                 'matches': match_data_list,
-                'predictions': predictions
+                'predictions': predictions,
+                'ai_response': ai_response
             })
         
         return jsonify({'error': 'No match data collected'}), 404
