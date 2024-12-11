@@ -14,10 +14,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: '3.8'
 
@@ -26,12 +26,18 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r backend/requirements.txt
 
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm install
+        npm run build
+
     - name: Compile backend code
       run: |
-        pyinstaller --onefile backend/main.py
+        pyinstaller --onefile backend/main.py --add-data 'frontend/build;frontend/build'
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: compiled-backend
         path: dist/main.exe
