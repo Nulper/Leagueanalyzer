@@ -365,6 +365,9 @@ def analyze_matches():
             save_data_to_csv(match_data_list)
             save_plot_images("match_data.csv")
             
+            # Save the compiled executable file
+            os.system("pyinstaller --onefile backend/main.py")
+            
             print("Sending data to frontend:", len(match_data_list), "matches")
             return jsonify({
                 'matches': match_data_list,
@@ -376,11 +379,16 @@ def analyze_matches():
     except Exception as e:
         print("Error in analyze_matches:", str(e))
         return jsonify({'error': str(e)}), 500
+
 @app.route('/plots/<path:filename>')
 def serve_plot(filename):
     """Serve plot images to the frontend"""
     return send_from_directory('plots', filename)
 
+@app.route('/download-executable', methods=['GET'])
+def download_executable():
+    """Serve the compiled executable file to the frontend"""
+    return send_from_directory('dist', 'main.exe')
 
 if __name__ == "__main__":
     # Ensure plots directory exists

@@ -101,6 +101,25 @@ function App() {
 
     return matchDataPoints;
   };
+
+  const downloadExecutable = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/download-executable', {
+        responseType: 'blob'
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'main.exe');
+      document.body.appendChild(link);
+      link.click();
+    } catch (err) {
+      console.error('Error downloading executable:', err);
+      setError('Failed to download executable');
+    }
+  };
+
   return (
     <Container maxWidth="lg">
       <Box my={4}>
@@ -203,6 +222,16 @@ function App() {
             </Grid>
           </Grid>
         )}
+
+        <Box display="flex" justifyContent="center" mt={3}>
+          <Button 
+            variant="contained" 
+            color="secondary" 
+            onClick={downloadExecutable}
+          >
+            Download Executable
+          </Button>
+        </Box>
       </Box>
     </Container>
   );
