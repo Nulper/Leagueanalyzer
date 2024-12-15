@@ -405,7 +405,10 @@ def download_executable():
 
 @app.route('/')
 def serve_frontend():
-    return send_from_directory(app.static_folder, 'index.html')
+    if os.path.exists(os.path.join(app.static_folder, 'index.html')):
+        return send_from_directory(app.static_folder, 'index.html')
+    else:
+        return "Frontend build not found. Please run 'npm run build' in the 'frontend' directory.", 404
 
 if __name__ == "__main__":
     # Ensure plots directory exists
