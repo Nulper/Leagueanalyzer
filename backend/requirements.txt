@@ -4,6 +4,6 @@ requests
 pandas
 matplotlib
 scipy
-openai
+openai>=1.0.0
 pyinstaller
 pytest
