@@ -1,0 +1,52 @@
+2024-12-16 00:19:58,530 - __main__ - INFO - Starting application
+2024-12-16 00:19:58,530 - __main__ - INFO - Application started successfully
+2024-12-16 00:19:58,555 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.179.205.27:5000
+2024-12-16 00:19:58,555 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-12-16 00:19:58,556 - werkzeug - INFO -  * Restarting with stat
+2024-12-16 00:20:00,760 - __main__ - INFO - Starting application
+2024-12-16 00:20:00,761 - __main__ - INFO - Application started successfully
+2024-12-16 00:20:00,770 - werkzeug - WARNING -  * Debugger is active!
+2024-12-16 00:20:00,773 - werkzeug - INFO -  * Debugger PIN: 339-106-309
+2024-12-16 00:20:30,755 - __main__ - INFO - Starting application
+2024-12-16 00:20:30,755 - __main__ - INFO - Application started successfully
+2024-12-16 00:20:30,775 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.179.205.27:5000
+2024-12-16 00:20:30,776 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-12-16 00:20:30,777 - werkzeug - INFO -  * Restarting with stat
+2024-12-16 00:20:32,995 - __main__ - INFO - Starting application
+2024-12-16 00:20:34,915 - __main__ - INFO - Application started successfully
+2024-12-16 00:20:34,926 - werkzeug - WARNING -  * Debugger is active!
+2024-12-16 00:20:34,930 - werkzeug - INFO -  * Debugger PIN: 143-940-209
+2024-12-16 00:24:18,510 - __main__ - INFO - Starting application
+2024-12-16 00:24:18,511 - __main__ - INFO - Application started successfully
+2024-12-16 00:24:18,523 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.179.205.27:5000
+2024-12-16 00:24:18,524 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-12-16 00:31:57,671 - __main__ - INFO - Starting application
+2024-12-16 00:31:57,671 - __main__ - INFO - Application started successfully
+2024-12-16 00:31:57,683 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.179.205.27:5000
+2024-12-16 00:31:57,683 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-12-16 00:36:35,654 - __main__ - INFO - Starting application
+2024-12-16 00:36:35,654 - __main__ - INFO - Application started successfully
+2024-12-16 00:36:35,670 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.179.205.27:5000
+2024-12-16 00:36:35,671 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-12-16 00:41:49,338 - __main__ - INFO - Starting application
+2024-12-16 00:41:49,339 - __main__ - INFO - Application started successfully
+2024-12-16 00:41:49,349 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.179.205.27:5000
+2024-12-16 00:41:49,349 - werkzeug - INFO - [33mPress CTRL+C to quit[0m

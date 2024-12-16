@@ -1,0 +1,47 @@
+2024-12-15 23:50:17,581 - __main__ - INFO - Starting application
+2024-12-15 23:50:17,581 - __main__ - INFO - Application started successfully
+2024-12-15 23:50:17,608 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.179.205.27:5000
+2024-12-15 23:50:17,608 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-12-15 23:50:17,610 - werkzeug - INFO -  * Restarting with stat
+2024-12-15 23:50:20,091 - __main__ - INFO - Starting application
+2024-12-15 23:50:20,091 - __main__ - INFO - Application started successfully
+2024-12-15 23:50:20,107 - werkzeug - WARNING -  * Debugger is active!
+2024-12-15 23:50:20,109 - werkzeug - INFO -  * Debugger PIN: 683-514-348
+2024-12-15 23:55:26,344 - werkzeug - INFO -  * Detected change in 'D:\\g\\Leagueanalyzer\\backend\\main.py', reloading
+2024-12-15 23:55:26,618 - werkzeug - INFO -  * Restarting with stat
+2024-12-15 23:55:29,289 - __main__ - INFO - Starting application
+2024-12-15 23:55:29,290 - __main__ - INFO - Application started successfully
+2024-12-15 23:55:29,306 - werkzeug - WARNING -  * Debugger is active!
+2024-12-15 23:55:29,309 - werkzeug - INFO -  * Debugger PIN: 683-514-348
+2024-12-15 23:56:13,011 - __main__ - INFO - Starting application
+2024-12-15 23:56:13,012 - __main__ - INFO - Application started successfully
+2024-12-15 23:56:13,032 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.179.205.27:5000
+2024-12-15 23:56:13,032 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-12-15 23:56:13,034 - werkzeug - INFO -  * Restarting with stat
+2024-12-15 23:56:15,594 - __main__ - INFO - Starting application
+2024-12-15 23:56:15,594 - __main__ - INFO - Application started successfully
+2024-12-15 23:56:15,612 - werkzeug - WARNING -  * Debugger is active!
+2024-12-15 23:56:15,614 - werkzeug - INFO -  * Debugger PIN: 683-514-348
+2024-12-15 23:56:22,982 - __main__ - INFO - Serving frontend
+2024-12-15 23:56:22,982 - __main__ - INFO - Looking for index.html at: D:\g\Leagueanalyzer\backend\../frontend/build\index.html
+2024-12-15 23:56:22,982 - __main__ - INFO - Static folder exists: True
+2024-12-15 23:56:22,983 - __main__ - INFO - Index.html exists: True
+2024-12-15 23:56:23,045 - werkzeug - INFO - 127.0.0.1 - - [15/Dec/2024 23:56:23] "GET / HTTP/1.1" 200 -
+2024-12-15 23:56:23,067 - werkzeug - INFO - 127.0.0.1 - - [15/Dec/2024 23:56:23] "GET /static/css/main.e6c13ad2.css HTTP/1.1" 200 -
+2024-12-15 23:56:24,407 - werkzeug - INFO - 127.0.0.1 - - [15/Dec/2024 23:56:24] "GET /static/js/main.aeb50da1.js HTTP/1.1" 200 -
+2024-12-15 23:56:24,505 - werkzeug - INFO - 127.0.0.1 - - [15/Dec/2024 23:56:24] "GET /manifest.json HTTP/1.1" 200 -
+2024-12-15 23:56:24,516 - werkzeug - INFO - 127.0.0.1 - - [15/Dec/2024 23:56:24] "GET /logo192.png HTTP/1.1" 200 -
+2024-12-16 00:01:45,778 - werkzeug - INFO -  * Detected change in 'D:\\g\\Leagueanalyzer\\backend\\main.py', reloading
+2024-12-16 00:01:45,884 - werkzeug - INFO -  * Detected change in 'D:\\g\\Leagueanalyzer\\backend\\main.py', reloading
+2024-12-16 00:01:46,195 - werkzeug - INFO -  * Restarting with stat
+2024-12-16 00:01:46,220 - werkzeug - INFO -  * Restarting with stat
+2024-12-16 00:05:41,555 - werkzeug - INFO -  * Restarting with stat
+2024-12-16 00:16:33,408 - werkzeug - INFO -  * Restarting with stat
+2024-12-16 00:17:19,625 - werkzeug - INFO -  * Restarting with stat
+2024-12-16 00:22:24,816 - werkzeug - INFO -  * Restarting with stat
