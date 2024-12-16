@@ -412,9 +412,6 @@ def analyze_matches():
             save_data_to_csv(match_data_list)
             save_plot_images("match_data.csv")
             
-            logger.info(f"Compiling executable")
-            os.system("pyinstaller --onefile backend/main.py --add-data 'frontend/build;frontend/build'")
-            
             logger.info(f"Analysis completed successfully for {name}#{tag}")
             return jsonify({
                 'matches': match_data_list,
@@ -455,6 +452,10 @@ def serve_frontend():
     else:
         logger.error(f"Frontend build not found at {static_folder_path}")
         return "Frontend build not found. Please run 'npm run build' in the 'frontend' directory.", 404
+
+@app.route('/frontend/<path:filename>')
+def serve_frontend_files(filename):
+    return send_from_directory(os.path.join(application_path, 'frontend', 'build'), filename)
 
 if __name__ == "__main__":
     logger.info("Starting application")
