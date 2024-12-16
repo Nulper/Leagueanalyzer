@@ -352,7 +352,7 @@ def riemann_prediction(time_points, values, future_points=5):
         return None
 
 app = Flask(__name__, 
-    static_folder=os.path.join(application_path, 'build'),
+    static_folder=os.path.join(application_path, 'frontend', 'build'),
     static_url_path='/')
 CORS(app)
 
