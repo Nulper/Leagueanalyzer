@@ -37,8 +37,6 @@ if getattr(sys, 'frozen', False):
 else:
     application_path = os.path.dirname(os.path.abspath(__file__))
 
-api_key = ""
-openai_api_key = "YOUR_OPENAI_API_KEY"
 
 class RiotAPIHeaders:
     def __init__(self, api_key):
@@ -55,8 +53,8 @@ def get_openai_response(prompt):
     logger.info("Requesting OpenAI response")
     openai.api_key = openai_api_key
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
+        response = openai.chat.completions.create(
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
@@ -64,7 +62,8 @@ def get_openai_response(prompt):
             max_tokens=150
         )
         logger.info("Successfully received OpenAI response")
-        return response.choices[0].message['content'].strip()
+        logger.info(f"Response: {response.choices[0].message}")
+        return response.choices[0].message
     except Exception as e:
         logger.error(f"Error in OpenAI response: {str(e)}")
         raise
