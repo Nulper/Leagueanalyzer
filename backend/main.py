@@ -55,13 +55,16 @@ def get_openai_response(prompt):
     logger.info("Requesting OpenAI response")
     openai.api_key = openai_api_key
     try:
-        response = openai.Completion.create(
-            engine="gpt-4o-mini",
-            prompt=prompt,
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": prompt}
+            ],
             max_tokens=150
         )
         logger.info("Successfully received OpenAI response")
-        return response.choices[0].text.strip()
+        return response.choices[0].message['content'].strip()
     except Exception as e:
         logger.error(f"Error in OpenAI response: {str(e)}")
         raise
