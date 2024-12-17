@@ -62,8 +62,8 @@ def get_openai_response(prompt):
             max_tokens=150
         )
         logger.info("Successfully received OpenAI response")
-        logger.info(f"Response: {response.choices[0].message}")
-        return response.choices[0].message
+        logger.info(f"Response: {response.choices[0].message.content}")
+        return response.choices[0].message.content
     except Exception as e:
         logger.error(f"Error in OpenAI response: {str(e)}")
         raise
