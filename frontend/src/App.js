@@ -28,6 +28,7 @@ function App() {
   const [error, setError] = useState(null);
   const [predictions, setPredictions] = useState({});
   const [aiResponse, setAiResponse] = useState(''); // P86d6
+  const [performanceScore, setPerformanceScore] = useState(0); // P327f
 
   const metrics = [
     'KDA', 'kills', 'deaths', 'assists', 
@@ -55,6 +56,7 @@ function App() {
             setMatchData(response.data.matches);
             setPredictions(response.data.predictions || {});
             setAiResponse(response.data.ai_response || ''); // P1715
+            setPerformanceScore(response.data.performance_score || 0); // P6466
         } else {
             console.log('No matches in response data');
             throw new Error('No matches found');
@@ -74,6 +76,7 @@ function App() {
         setMatchData([]);
         setPredictions({});
         setAiResponse(''); // P1715
+        setPerformanceScore(0); // P6466
     } finally {
         setLoading(false);
     }
@@ -227,6 +230,12 @@ function App() {
               <Paper elevation={3} style={{ padding: 20 }}>
                 <Typography variant="h6">AI Insights and Champion Recommendations</Typography>
                 <Typography variant="body1">{aiResponse}</Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={12}>
+              <Paper elevation={3} style={{ padding: 20 }}>
+                <Typography variant="h6">Performance Score</Typography>
+                <Typography variant="body1">{performanceScore}</Typography>
               </Paper>
             </Grid>
           </Grid>
