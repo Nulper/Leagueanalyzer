@@ -351,6 +351,31 @@ def riemann_prediction(time_points, values, future_points=5):
         logger.error(f"Error in Riemann prediction: {str(e)}")
         return None
 
+def calculate_performance_score(match_data):
+    total_score = 0
+    total_weight = 0
+
+    criteria = {
+        'gold_per_minute': (0.3, 150),
+        'kda': (0.25, 125),
+        'damage_dealt': (0.2, 100),
+        'damage_taken': (0.15, 75),
+        'vision_score': (0.1, 50)
+    }
+
+    for key, (weight, max_score) in criteria.items():
+        if key in match_data:
+            score = (match_data[key] / max_score) * weight * 100
+            total_score += score
+            total_weight += weight
+
+    if total_weight > 0:
+        performance_score = (total_score / total_weight) * 5
+    else:
+        performance_score = 0
+
+    return performance_score
+
 app = Flask(__name__, 
     static_folder=os.path.join(application_path, 'frontend', 'build'),
     static_url_path='/')
@@ -412,11 +437,15 @@ def analyze_matches():
             save_data_to_csv(match_data_list)
             save_plot_images("match_data.csv")
             
+            performance_scores = [calculate_performance_score(match) for match in match_data_list]
+            average_performance_score = sum(performance_scores) / len(performance_scores) if performance_scores else 0
+            
             logger.info(f"Analysis completed successfully for {name}#{tag}")
             return jsonify({
                 'matches': match_data_list,
                 'predictions': predictions,
-                'ai_response': ai_response
+                'ai_response': ai_response,
+                'performance_score': average_performance_score
             })
         
         logger.error("No match data collected")
