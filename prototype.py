@@ -196,62 +196,70 @@ def save_data_to_csv(match_data_list, filename="match_data.csv"):
     except Exception as e:
         print(f"Error saving data to CSV: {e}")
     print(f"Data saved to {filename}")
+
 def visualize_data(filename="match_data.csv"):
+    global logger    # Use the global logger instance
+    
+    logger.info(f"Visualizing data from {filename}")
     try:
         df = pd.read_csv(filename, on_bad_lines='skip')
     except pd.errors.ParserError as e:
-        print(f"Error reading the CSV file: {e}")
+        logger.error(f"Error reading CSV file: {e}")
         return
 
-    # Print the DataFrame to inspect the data before plotting
-    print("Data from CSV:")
-    print(df.head())
-
-    df['game_creation'] = pd.to_datetime(df['game_creation'], unit='ms')
+    logger.info("Data loaded successfully, starting visualization")
+    
+    # 매치 번호순으로 정렬
+    df = df.sort_values('game_creation')
+    # 매치 인덱스 생성 (1부터 시작)
+    df['match_number'] = range(1, len(df) + 1)
     df['KDA'] = (df['kills'] + df['assists']) / df['deaths'].replace(0, 1)
 
     metrics = {
-        'KDA': ('KDA', 'KDA Ratio', 'KDA Trend Over Time'),
-        'damage_dealt': ('damage_dealt', 'Damage Dealt to Champions', 'Damage Dealt to Champions Over Time', 'r'),
-        'damage_taken': ('damage_taken', 'Damage Taken', 'Damage Taken Over Time', 'g'),
-        'gold_earned': ('gold_earned', 'Gold Earned', 'Gold Earned Over Time', 'y'),
-        'wards_placed': ('wards_placed', 'Wards Placed', 'Wards Placed Over Time', 'b'),
-        'creep_score': ('creep_score', 'Creep Score', 'Creep Score Over Time', 'm'),
-        'damage_per_minute': ('damage_per_minute', 'Damage Per Minute', 'Damage Per Minute Over Time', 'c'),
-        'gold_per_minute': ('gold_per_minute', 'Gold Per Minute', 'Gold Per Minute Over Time', 'orange'),
-        'damage_mitigated': ('damage_mitigated', 'Damage Mitigated', 'Damage Mitigated Over Time'),
-        'vision_score': ('vision_score', 'Vision Score', 'Vision Score Over Time'),
-        'control_wards_purchased': ('control_wards_purchased', 'Control Wards Purchased', 'Control Wards Purchased Over Time'),
-        'cs_per_minute': ('cs_per_minute', 'CS Per Minute', 'CS Per Minute Over Time'),
-        'gold_diff_10': ('gold_diff_10', 'Gold Difference at 10 Minutes', 'Gold Difference at 10 Minutes Over Time'),
-        'xp_diff_10': ('xp_diff_10', 'XP Difference at 10 Minutes', 'XP Difference at 10 Minutes Over Time'),
-        'towers_destroyed': ('towers_destroyed', 'Towers Destroyed', 'Towers Destroyed Over Time'),
-        'dragons_secured': ('dragons_secured', 'Dragons Secured', 'Dragons Secured Over Time'),
-        'rift_herald_secured': ('rift_herald_secured', 'Rift Heralds Secured', 'Rift Heralds Secured Over Time'),
-        'barons_secured': ('barons_secured', 'Barons Secured', 'Barons Secured Over Time'),
-        'crowd_control_score': ('crowd_control_score', 'Crowd Control Score', 'Crowd Control Score Over Time'),
-        'healing_done': ('healing_done', 'Healing Done', 'Healing Done Over Time'),
-        'shielding_done': ('shielding_done', 'Shielding Done', 'Shielding Done Over Time'),
-        'damage_to_structures': ('damage_to_structures', 'Damage to Structures', 'Damage to Structures Over Time'),
-        'kill_participation': ('kill_participation', 'Kill Participation', 'Kill Participation Over Time'),
-        'damage_percentage': ('damage_percentage', 'Damage Percentage', 'Damage Percentage Over Time'),
-        'vision_score_per_minute': ('vision_score_per_minute', 'Vision Score Per Minute', 'Vision Score Per Minute Over Time')
+        'KDA': ('KDA', 'KDA Ratio', 'KDA Trend Over Matches'),
+        'damage_dealt': ('damage_dealt', 'Damage Dealt to Champions', 'Damage Dealt Over Matches', 'r'),
+        'damage_taken': ('damage_taken', 'Damage Taken', 'Damage Taken Over Matches', 'g'),
+        'gold_earned': ('gold_earned', 'Gold Earned', 'Gold Earned Over Matches', 'y'),
+        'wards_placed': ('wards_placed', 'Wards Placed', 'Wards Placed Over Matches', 'b'),
+        'creep_score': ('creep_score', 'Creep Score', 'Creep Score Over Matches', 'm'),
+        'damage_per_minute': ('damage_per_minute', 'Damage Per Minute', 'Damage Per Minute Over Matches', 'c'),
+        'gold_per_minute': ('gold_per_minute', 'Gold Per Minute', 'Gold Per Minute Over Matches', 'orange'),
+        'damage_mitigated': ('damage_mitigated', 'Damage Mitigated', 'Damage Mitigated Over Matches'),
+        'vision_score': ('vision_score', 'Vision Score', 'Vision Score Over Matches'),
+        'control_wards_purchased': ('control_wards_purchased', 'Control Wards Purchased', 'Control Wards Purchased Over Matches'),
+        'cs_per_minute': ('cs_per_minute', 'CS Per Minute', 'CS Per Minute Over Matches'),
+        'gold_diff_10': ('gold_diff_10', 'Gold Difference at 10 Minutes', 'Gold Difference Over Matches'),
+        'xp_diff_10': ('xp_diff_10', 'XP Difference at 10 Minutes', 'XP Difference Over Matches'),
+        'towers_destroyed': ('towers_destroyed', 'Towers Destroyed', 'Towers Destroyed Over Matches'),
+        'dragons_secured': ('dragons_secured', 'Dragons Secured', 'Dragons Secured Over Matches'),
+        'rift_herald_secured': ('rift_herald_secured', 'Rift Heralds Secured', 'Rift Heralds Over Matches'),
+        'barons_secured': ('barons_secured', 'Barons Secured', 'Barons Secured Over Matches'),
+        'crowd_control_score': ('crowd_control_score', 'Crowd Control Score', 'Crowd Control Score Over Matches'),
+        'healing_done': ('healing_done', 'Healing Done', 'Healing Done Over Matches'),
+        'shielding_done': ('shielding_done', 'Shielding Done', 'Shielding Done Over Matches'),
+        'damage_to_structures': ('damage_to_structures', 'Damage to Structures', 'Damage to Structures Over Matches'),
+        'kill_participation': ('kill_participation', 'Kill Participation', 'Kill Participation Over Matches'),
+        'damage_percentage': ('damage_percentage', 'Damage Percentage', 'Damage Percentage Over Matches'),
+        'vision_score_per_minute': ('vision_score_per_minute', 'Vision Score Per Minute', 'Vision Score Per Minute Over Matches')
     }
 
     for key, (metric, ylabel, title, *color) in metrics.items():
+        logger.info(f"Plotting {metric}")
         if metric in df.columns and df[metric].sum() > 0:
-            print(f"Plotting {metric} with total sum: {df[metric].sum()}")
+            logger.info(f"Plotting {metric} with total sum: {df[metric].sum()}")
             plt.figure(figsize=(10, 6))
-            plt.plot(df['game_creation'], df[metric], marker='o', linestyle='-', color=color[0] if color else None, label=f'{title} Trend')
-            plt.xlabel('Game Creation Date')
+            plt.plot(df['match_number'], df[metric], marker='o', linestyle='-', 
+                    color=color[0] if color else None, label=f'{title} Trend')
+            plt.xlabel('Match Number')
             plt.ylabel(ylabel)
             plt.title(title)
             plt.legend()
-            plt.xticks(rotation=45)
+            plt.xticks(df['match_number'], rotation=0)
+            plt.grid(True, linestyle='--', alpha=0.7)
             plt.tight_layout()
             plt.show()
         else:
-            print(f"No data available for {metric} to plot.")
+            logger.warning(f"No data available for {metric} to plot")
 
 # Main function to run the script
 if __name__ == "__main__":
