@@ -13,7 +13,11 @@ from scipy import stats
 from scipy.optimize import curve_fit
 import openai
 import sys
+import asyncio  # Add this import
+from functools import partial
 
+api_key = ""
+openai_api_key = ""
 
 # 로깅 설정
 def setup_logging():
@@ -49,24 +53,38 @@ class RiotAPIHeaders:
             "X-Riot-Token": api_key
         }
 
-def get_openai_response(prompt):
+async def get_openai_response(prompt):
     logger.info("Requesting OpenAI response")
     openai.api_key = openai_api_key
     try:
-        response = openai.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=150
+        logger.info("Starting OpenAI request")
+        
+        # Create a ClientSession for async HTTP requests
+        response = await asyncio.get_event_loop().run_in_executor(
+            None,
+            lambda: openai.chat.completions.create(  # Using create instead of acreate
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant that analyzes League of Legends match data. Provide detailed analysis and champion recommendations. Be thorough but concise."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=2000,
+                temperature=0.7,
+                presence_penalty=0.1,
+                frequency_penalty=0.1
+            )
         )
+        
         logger.info("Successfully received OpenAI response")
-        logger.info(f"Response: {response.choices[0].message.content}")
-        return response.choices[0].message.content
+        content = response.choices[0].message.content
+        logger.info(f"Response received: {len(content)} characters")
+        return content
+
     except Exception as e:
-        logger.error(f"Error in OpenAI response: {str(e)}")
-        raise
+        logger.error(f"Unexpected error: {str(e)}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        return f"Unexpected error: {str(e)}"
 
 def get_player_data(api_key, name, tag):
     logger.info(f"Fetching player data for {name}#{tag}")
@@ -256,6 +274,8 @@ def save_data_to_csv(match_data_list, filename="match_data.csv"):
     print(f"Data saved to {filename}")
 
 def visualize_data(filename="match_data.csv"):
+    global logger
+    
     logger.info(f"Visualizing data from {filename}")
     try:
         df = pd.read_csv(filename, on_bad_lines='skip')
@@ -264,48 +284,45 @@ def visualize_data(filename="match_data.csv"):
         return
 
     logger.info("Data loaded successfully, starting visualization")
-    df['game_creation'] = pd.to_datetime(df['game_creation'], unit='ms')
+    
+    # 매치 아이디 숫자로 변환 (예: KR_12345 -> 12345)
+    df['match_number'] = df['match_id'].str.extract('(\d+)').astype(int)
+    df = df.sort_values('match_number')  # 매치 번호로 정렬
     df['KDA'] = (df['kills'] + df['assists']) / df['deaths'].replace(0, 1)
 
     metrics = {
-    'KDA': ('KDA', 'KDA Ratio', 'KDA Trend Over Time'),
-    'damage_dealt': ('damage_dealt', 'Damage Dealt to Champions', 'Damage Dealt to Champions Over Time', 'r'),
-    'damage_taken': ('damage_taken', 'Damage Taken', 'Damage Taken Over Time', 'g'),
-    'gold_earned': ('gold_earned', 'Gold Earned', 'Gold Earned Over Time', 'y'),
-    'wards_placed': ('wards_placed', 'Wards Placed', 'Wards Placed Over Time', 'b'),
-    'creep_score': ('creep_score', 'Creep Score', 'Creep Score Over Time', 'm'),
-    'damage_per_minute': ('damage_per_minute', 'Damage Per Minute', 'Damage Per Minute Over Time', 'c'),
-    'gold_per_minute': ('gold_per_minute', 'Gold Per Minute', 'Gold Per Minute Over Time', 'orange'),
-    'damage_mitigated': ('damage_mitigated', 'Damage Mitigated', 'Damage Mitigated Over Time'),
-    'vision_score': ('vision_score', 'Vision Score', 'Vision Score Over Time'),
-    'control_wards_purchased': ('control_wards_purchased', 'Control Wards Purchased', 'Control Wards Purchased Over Time'),
-    'cs_per_minute': ('cs_per_minute', 'CS Per Minute', 'CS Per Minute Over Time'),
-    'gold_diff_10': ('gold_diff_10', 'Gold Difference at 10 Minutes', 'Gold Difference at 10 Minutes Over Time'),
-    'xp_diff_10': ('xp_diff_10', 'XP Difference at 10 Minutes', 'XP Difference at 10 Minutes Over Time'),
-    'towers_destroyed': ('towers_destroyed', 'Towers Destroyed', 'Towers Destroyed Over Time'),
-    'dragons_secured': ('dragons_secured', 'Dragons Secured', 'Dragons Secured Over Time'),
-    'rift_herald_secured': ('rift_herald_secured', 'Rift Heralds Secured', 'Rift Heralds Secured Over Time'),
-    'barons_secured': ('barons_secured', 'Barons Secured', 'Barons Secured Over Time'),
-    'crowd_control_score': ('crowd_control_score', 'Crowd Control Score', 'Crowd Control Score Over Time'),
-    'healing_done': ('healing_done', 'Healing Done', 'Healing Done Over Time'),
-    'shielding_done': ('shielding_done', 'Shielding Done', 'Shielding Done Over Time'),
-    'damage_to_structures': ('damage_to_structures', 'Damage to Structures', 'Damage to Structures Over Time'),
-    'kill_participation': ('kill_participation', 'Kill Participation', 'Kill Participation Over Time'),
-    'damage_percentage': ('damage_percentage', 'Damage Percentage', 'Damage Percentage Over Time'),
-    'vision_score_per_minute': ('vision_score_per_minute', 'Vision Score Per Minute', 'Vision Score Per Minute Over Time')
-}
+        'KDA': ('KDA', 'KDA Ratio', 'KDA Trend Over Matches'),
+        'damage_dealt': ('damage_dealt', 'Damage Dealt to Champions', 'Damage Dealt Over Matches', 'r'),
+        'damage_taken': ('damage_taken', 'Damage Taken', 'Damage Taken Over Matches', 'g'),
+        'gold_earned': ('gold_earned', 'Gold Earned', 'Gold Earned Over Matches', 'y'),
+        'wards_placed': ('wards_placed', 'Wards Placed', 'Wards Placed Over Matches', 'b'),
+        'creep_score': ('creep_score', 'Creep Score', 'Creep Score Over Matches', 'm'),
+        'damage_per_minute': ('damage_per_minute', 'Damage Per Minute', 'Damage Per Minute Over Matches', 'c'),
+        'gold_per_minute': ('gold_per_minute', 'Gold Per Minute', 'Gold Per Minute Over Matches', 'orange')
+    }
 
     for key, (metric, ylabel, title, *color) in metrics.items():
         logger.info(f"Plotting {metric}")
         if metric in df.columns and df[metric].sum() > 0:
-            logger.debug(f"Plotting {metric} with total sum: {df[metric].sum()}")
-            plt.figure(figsize=(10, 6))
-            plt.plot(df['game_creation'], df[metric], marker='o', linestyle='-', color=color[0] if color else None, label=f'{title} Trend')
-            plt.xlabel('Game Creation Date')
+            logger.info(f"Plotting {metric} with total sum: {df[metric].sum()}")
+            plt.figure(figsize=(12, 6))
+            
+            # 플롯 생성
+            plt.plot(range(len(df)), df[metric], marker='o', linestyle='-', 
+                    color=color[0] if color else None, label=f'{title}')
+            
+            # x축 설정
+            plt.xticks(range(len(df)), [f'Match {i+1}' for i in range(len(df))], 
+                      rotation=45, ha='right')
+            
+            # 그리드, 레이블 등 설정
+            plt.grid(True, linestyle='--', alpha=0.7)
+            plt.xlabel('Match Number')
             plt.ylabel(ylabel)
             plt.title(title)
             plt.legend()
-            plt.xticks(rotation=45)
+            
+            # 여백 조정
             plt.tight_layout()
             plt.show()
         else:
@@ -429,10 +446,15 @@ def analyze_matches():
                 pred = riemann_prediction(range(len(values)), values)
                 if pred:
                     predictions[metric] = pred
-            
+
             prompt = f"Analyze the following match data and recommend champions: {json.dumps(match_data_list)}"
             logger.info("Requesting AI analysis")
-            ai_response = get_openai_response(prompt)
+            
+            # 비동기 함수를 동기적으로 실행
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            ai_response = loop.run_until_complete(get_openai_response(prompt))
+            loop.close()
             
             save_data_to_csv(match_data_list)
             save_plot_images("match_data.csv")
